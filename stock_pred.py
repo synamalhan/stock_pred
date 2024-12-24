@@ -1,83 +1,83 @@
+import streamlit as st
 import yfinance as yf
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestClassifier
-from xgboost import XGBClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix
-import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+import numpy as np 
 
-# Fetch historical data for the stock
-ticker = 'AAPL'
-data = yf.Ticker(ticker).history(period='5y')
 
-# Prepare the data for classification
-data = data[['Close']]
-data['Target'] = (data['Close'].shift(-1) > data['Close']).astype(int)  # 1 if price increases, 0 otherwise
-data = data.dropna()
+# Streamlit app title
+st.title("Stock Prediction Application")
 
-# Features and target
-X = data[['Close']]
-y = data['Target']
+# Input for stock ticker
+ticker = st.text_input("Enter a stock ticker (e.g., AAPL):", value="AAPL")
 
-# Split data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+# Fetch historical data
+@st.cache_data
+def fetch_data(ticker):
+    stock = yf.Ticker(ticker)
+    return stock.history(period='5y')[['Close']]
 
-# Models
-models = {
-    "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42),
-    "XGBoost": XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
-}
+if ticker:
+    data = fetch_data(ticker)
 
-# Store performance
-results = {}
+    # Display historical data
+    st.subheader("Historical Data")
+    st.line_chart(data['Close'])
 
-for name, model in models.items():
-    # Train the model
+    # Add moving averages
+    data['SMA_10'] = data['Close'].rolling(window=10).mean()
+    data['SMA_50'] = data['Close'].rolling(window=50).mean()
+
+    # Linear Regression for Next-Day Prediction
+    data['Target'] = data['Close'].shift(-1)
+    data = data.dropna()
+
+    X = data[['Close']]
+    y = data['Target']
+
+    # Split data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+
+    # Train Linear Regression model
+    model = LinearRegression()
     model.fit(X_train, y_train)
+
+    # Predict for the next 5 days
+    predictions = []
+    last_price = data['Close'].iloc[-1]
     
-    # Make predictions
-    y_pred = model.predict(X_test)
+    for _ in range(5):  # Predict for the next 5 days
+        next_day_prediction = model.predict([[last_price]])[0]
+        predictions.append(next_day_prediction)
+        last_price = next_day_prediction  # Update the last price for the next prediction
+
+    # Prepare dates for the next 5 trading days
+    prediction_dates = []
+    current_date = data.index[-1]
     
-    # Calculate accuracy
-    accuracy = accuracy_score(y_test, y_pred)
-    cm = confusion_matrix(y_test, y_pred)
+    for _ in range(5):
+        # Find the next trading day (skip weekends/holidays)
+        current_date += pd.Timedelta(days=1)
+        while current_date.weekday() >= 5:  # If Saturday or Sunday, skip
+            current_date += pd.Timedelta(days=1)
+        prediction_dates.append(current_date)
+
+    prediction_df = pd.DataFrame({'Date': prediction_dates, 'Prediction': predictions})
+    prediction_df.set_index('Date', inplace=True)
+
+    # Combine historical data, moving averages, and predictions for visualization
+    data_for_plot = data.copy()
     
-    results[name] = {
-        "accuracy": accuracy,
-        "confusion_matrix": cm
-    }
+    # Ensure today's data is included for the plot (i.e., the last actual data point)
+    data_for_plot['Prediction'] = np.nan  # Initialize the prediction column
+    for date, prediction in zip(prediction_dates, predictions):
+        data_for_plot.loc[date, 'Prediction'] = prediction
 
-# Plot actual vs predicted for Linear Regression
-# Prepare the data for regression
-data['Target'] = data['Close'].shift(-1)  # The target is the next day's closing price
-data = data.dropna()
+    st.subheader(f"{ticker} Stock Price and Predictions")
+    st.line_chart(data_for_plot[['Close', 'SMA_10', 'SMA_50', 'Prediction']])
 
-X_reg = data[['Close']]
-y_reg = data['Target']
-
-# Split data
-X_train_reg, X_test_reg, y_train_reg, y_test_reg = train_test_split(X_reg, y_reg, test_size=0.2, shuffle=False)
-
-# Train regression model
-linear_model = LinearRegression()
-linear_model.fit(X_train_reg, y_train_reg)
-
-# Make predictions
-y_pred_reg = linear_model.predict(X_test_reg)
-
-# Plot regression
-plt.figure(figsize=(12, 6))
-plt.plot(y_test_reg.index, y_test_reg, label='Actual')
-plt.plot(y_test_reg.index, y_pred_reg, label='Predicted', linestyle='dashed')
-plt.legend()
-plt.title(f'{ticker} Stock Price Prediction (Linear Regression)')
-plt.show()
-
-# Print classification results
-for name, metrics in results.items():
-    print(f"Model: {name}")
-    print(f"Accuracy: {metrics['accuracy']:.2f}")
-    print("Confusion Matrix:")
-    print(metrics['confusion_matrix'])
-    print("-" * 30)
+    # Display predictions for the next week
+    st.subheader("Next Week's Predictions")
+    for date, prediction in zip(prediction_dates, predictions):
+        st.write(f"Predicted Closing Price for **{date.strftime('%Y-%m-%d')}**: **${prediction:.2f}**")
