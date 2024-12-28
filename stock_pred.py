@@ -9,12 +9,9 @@ import numpy as np
 
 # Streamlit app title
 st.title("Enhanced Stock Prediction App with Random Forest")
-
-
-
-
-with st.expander("🔍 Moving Averages"):
-    st.write("**SMA_10** and **SMA_50** are the 10-day and 50-day simple moving averages, which smooth stock price trends.")
+st.sidebar.title("About the Model")
+# with st.expander(" Moving Averages"):
+#     st.write("**SMA_10** and **SMA_50** are the 10-day and 50-day simple moving averages, which smooth stock price trends.")
 
 # Input for stock ticker
 ticker = st.text_input("Enter a stock ticker (e.g., AAPL):", value="AAPL")
@@ -87,7 +84,7 @@ if ticker:
         z=cm,
         x=['Predicted: Down', 'Predicted: Up'],
         y=['Actual: Down', 'Actual: Up'],
-        colorscale='Blues',
+        colorscale='viridis',
         showscale=True))
     fig_cm.update_layout(title_text="Confusion Matrix", xaxis_title="Predicted", yaxis_title="Actual")
     st.sidebar.plotly_chart(fig_cm)
@@ -99,8 +96,8 @@ if ticker:
 
     fpr, tpr, _ = roc_curve(y_test, model.predict_proba(X_test)[:, 1])
     fig_roc = go.Figure()
-    fig_roc.add_trace(go.Scatter(x=fpr, y=tpr, mode='lines', name="ROC Curve"))
-    fig_roc.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode='lines', line=dict(dash='dash'), name="Random Model"))
+    fig_roc.add_trace(go.Scatter(x=fpr, y=tpr, mode='lines', name="ROC Curve", line=dict(color='royalblue')))  # Custom color
+    fig_roc.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode='lines', line=dict(dash='dash', color='gray'), name="Random Model"))
     fig_roc.update_layout(title="ROC Curve", xaxis_title="False Positive Rate", yaxis_title="True Positive Rate")
     st.sidebar.plotly_chart(fig_roc)
 
@@ -141,9 +138,9 @@ if ticker:
     # Visualization of Stock Prices and Moving Averages
     st.subheader(f"{ticker} Stock Prices and Moving Averages")
     fig_prices = go.Figure()
-    fig_prices.add_trace(go.Scatter(x=data.index, y=data['Close'], mode='lines', name="Closing Price"))
-    fig_prices.add_trace(go.Scatter(x=data.index, y=data['SMA_10'], mode='lines', name="SMA_10"))
-    fig_prices.add_trace(go.Scatter(x=data.index, y=data['SMA_50'], mode='lines', name="SMA_50"))
+    fig_prices.add_trace(go.Scatter(x=data.index, y=data['Close'], mode='lines', name="Closing Price", line=dict(color='green')))  
+    fig_prices.add_trace(go.Scatter(x=data.index, y=data['SMA_10'], mode='lines', name="SMA_10", line=dict(color='orange')))  
+    fig_prices.add_trace(go.Scatter(x=data.index, y=data['SMA_50'], mode='lines', name="SMA_50", line=dict(color='red')))  
     fig_prices.update_layout(title="Stock Prices and Moving Averages", xaxis_title="Date", yaxis_title="Price")
     st.plotly_chart(fig_prices)
 
