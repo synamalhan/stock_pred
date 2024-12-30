@@ -10,7 +10,9 @@ def single_stock_page():
     st.header("Single Stock Prediction")
 
     # Stock Ticker Input
-    ticker = st.text_input("Enter a stock ticker (e.g., AAPL):", value="AAPL")
+    ticker = st.text_input("Enter a stock ticker (e.g., AAPL):")
+
+    st.divider()
 
     if ticker:
         # Fetch stock data from Yahoo Finance
@@ -25,7 +27,12 @@ def single_stock_page():
         st.write(f"**Symbol**: {ticker}")
         st.write(f"**Today's Price**: ${today_price:.2f}")
 
+        st.divider()
+
         pred = st.container()
+
+        st.divider()
+
         # Plotting Stock Prices
         st.subheader(f"Stock Prices for {ticker}")
         fig = go.Figure(data=[go.Candlestick(x=data.index,
@@ -35,6 +42,8 @@ def single_stock_page():
                                              close=data['Close'])])
         fig.update_layout(title=f'{ticker} Stock Prices', xaxis_title="Date", yaxis_title="Price")
         st.plotly_chart(fig)
+
+        st.divider()
 
         # Add RSI Calculation
         st.subheader("Relative Strength Index (RSI)")
@@ -52,9 +61,9 @@ def single_stock_page():
 
         # Random Forest Graphs (Confusion Matrix and Precision-Recall Curve)
         model_detail.subheader("Random Forest Performance Graphs")
-        with model_detail.popover("Confusion Matrix"):
+        with model_detail.popover("Confusion Matrix", use_container_width=True):
             st.plotly_chart(confusion_matrix_fig, use_container_width=True)
-        with model_detail.popover("Precision-Recall Curve"):
+        with model_detail.popover("Precision-Recall Curve", use_container_width=True):
             st.plotly_chart(precision_recall_fig, use_container_width=True)
 
         # Train and Display LSTM Model
@@ -64,7 +73,7 @@ def single_stock_page():
 
         # Display Training Loss Curve
         model_detail.subheader("LSTM Performance Graphs")
-        with model_detail.popover("Training Loss Curve"):
+        with model_detail.popover("Training Loss Curve", use_container_width=True):
             st.plotly_chart(loss_curve_fig, use_container_width=True)
 
         # Predict next week's prices and behavior
@@ -93,5 +102,5 @@ def single_stock_page():
             "Predicted Price": [f"${pred:.2f}" for pred in predictions],
             "Behavior": behavior
         })
-        pred.write(predictions_df)
+        pred.dataframe(predictions_df, hide_index=True, use_container_width=True)
 

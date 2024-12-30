@@ -7,7 +7,7 @@ st.title("Enhanced Stock Prediction App")
 
 # Sidebar Navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Single Stock Prediction", "Portfolio Analysis"],
+page = st.sidebar.radio(" ", ["Single Stock Prediction", "Portfolio Analysis"],
                         captions=[
                                 "Predict behaviour for one stock.",
                                 "Add your portfolio and predict behaviour for entire portfolio.",

@@ -41,20 +41,20 @@ import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
 
-# Function to plot confusion matrix for Random Forest
+# Function to plot confusion matrix for Random Forest with custom color scheme
 def plot_confusion_matrix_rf(y_test, y_pred):
     cm = confusion_matrix(y_test, y_pred)
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Down", "Up"])
-    disp.plot(cmap=plt.cm.Blues)
+    disp.plot(cmap="twilight")  # Custom color scheme
     plt.title("Confusion Matrix - Random Forest")
     plt.show()
 
-# Function to plot precision-recall curve for Random Forest
+# Function to plot precision-recall curve for Random Forest with custom colors
 def plot_precision_recall_curve_rf(y_test, y_prob):
     precision, recall, _ = precision_recall_curve(y_test, y_prob[:, 1])
     pr_auc = auc(recall, precision)
     plt.figure()
-    plt.plot(recall, precision, marker='.', label=f'PR AUC = {pr_auc:.2f}')
+    plt.plot(recall, precision, marker='.', color='#FF5733', label=f'PR AUC = {pr_auc:.2f}')  # Custom color
     plt.title("Precision-Recall Curve - Random Forest")
     plt.xlabel("Recall")
     plt.ylabel("Precision")
@@ -62,9 +62,10 @@ def plot_precision_recall_curve_rf(y_test, y_prob):
     plt.grid()
     plt.show()
 
-# Function to plot loss curve for LSTM
+# Function to plot loss curve for LSTM with custom color scheme
 def plot_loss_curve_lstm(history):
-    plt.plot(history.history['loss'], label='Training Loss')
+    plt.plot(history.history['loss'], label='Training Loss', color='#1f77b4')  # Custom color
+    plt.plot(history.history['val_loss'], label='Validation Loss', color='#ff7f0e')  # Custom color
     plt.title("LSTM Loss Curve")
     plt.xlabel("Epochs")
     plt.ylabel("Loss")
@@ -72,7 +73,7 @@ def plot_loss_curve_lstm(history):
     plt.grid()
     plt.show()
 
-# Updated Random Forest training function with graph generation
+# Updated Random Forest training function with custom colors for graphs
 def train_rf_model_with_graphs(data):
     # Feature Engineering
     data['SMA_10'] = data['Close'].rolling(window=10).mean()
@@ -100,17 +101,17 @@ def train_rf_model_with_graphs(data):
 
     # Generate Confusion Matrix
     cm = confusion_matrix(y_test, y_pred)
-    confusion_matrix_fig = px.imshow(cm, text_auto=True, title="Confusion Matrix")
+    confusion_matrix_fig = px.imshow(cm, text_auto=True, title="Confusion Matrix", color_continuous_scale="pinkyl")  # Custom color scale
 
     # Generate Precision-Recall Curve
     precision, recall, _ = precision_recall_curve(y_test, y_pred_proba[:, 1])
     precision_recall_fig = go.Figure()
-    precision_recall_fig.add_trace(go.Scatter(x=recall, y=precision, mode='lines', name='Precision-Recall'))
+    precision_recall_fig.add_trace(go.Scatter(x=recall, y=precision, mode='lines', name='Precision-Recall', line=dict(color='#FF5733')))  # Custom color
     precision_recall_fig.update_layout(title="Precision-Recall Curve", xaxis_title="Recall", yaxis_title="Precision")
 
     return model, accuracy, confusion_matrix_fig, precision_recall_fig
 
-# Updated LSTM training function with loss curve
+# Updated LSTM training function with custom color for loss curve
 def train_lstm_model_with_graphs(data):
     # Scale data
     scaler = MinMaxScaler(feature_range=(0, 1))
@@ -148,11 +149,13 @@ def train_lstm_model_with_graphs(data):
     loss_curve_fig.add_trace(go.Scatter(x=list(range(1, len(history.history['loss']) + 1)),
                                         y=history.history['loss'],
                                         mode='lines',
-                                        name='Training Loss'))
+                                        name='Training Loss',
+                                        line=dict(color='#1f77b4')))  # Custom color for training loss
     loss_curve_fig.add_trace(go.Scatter(x=list(range(1, len(history.history['val_loss']) + 1)),
                                         y=history.history['val_loss'],
                                         mode='lines',
-                                        name='Validation Loss'))
+                                        name='Validation Loss',
+                                        line=dict(color='#ff7f0e')))  # Custom color for validation loss
     loss_curve_fig.update_layout(title="LSTM Training Loss Curve",
                                   xaxis_title="Epoch",
                                   yaxis_title="Loss")
