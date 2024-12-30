@@ -7,7 +7,6 @@ st.set_page_config(
     layout="wide",
     page_icon="logo.png"
 )
-st.logo("logo.png", size="large")
 # Streamlit App Title
 st.markdown("<h1 style='text-align: center;'>Enhanced Stock Prediction App</h1>", unsafe_allow_html=True)
 
