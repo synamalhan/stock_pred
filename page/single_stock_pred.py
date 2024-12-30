@@ -42,26 +42,29 @@ def single_stock_page():
         st.line_chart(data['RSI'])
 
         # Train and Display Random Forest Model
-        st.sidebar.subheader("Random Forest Model")
-        st.sidebar.write("Training the model...")
+        st.sidebar.divider()
+
+        model_detail = st.sidebar.container(border=True)
+        model_detail.subheader("Random Forest Model")
+        model_detail.caption("Training the model...")
         model_rf, accuracy, confusion_matrix_fig, precision_recall_fig = train_rf_model_with_graphs(data)
-        st.sidebar.write(f"Accuracy: {accuracy:.2f}")
+        model_detail.write(f"Accuracy: {accuracy:.2f}")
 
         # Random Forest Graphs (Confusion Matrix and Precision-Recall Curve)
-        st.sidebar.subheader("Random Forest Performance Graphs")
-        with st.sidebar.expander("Confusion Matrix"):
+        model_detail.subheader("Random Forest Performance Graphs")
+        with model_detail.popover("Confusion Matrix"):
             st.plotly_chart(confusion_matrix_fig, use_container_width=True)
-        with st.sidebar.expander("Precision-Recall Curve"):
+        with model_detail.popover("Precision-Recall Curve"):
             st.plotly_chart(precision_recall_fig, use_container_width=True)
 
         # Train and Display LSTM Model
-        st.sidebar.subheader("LSTM Model")
-        st.sidebar.write("Training the model...")
+        model_detail.subheader("LSTM Model")
+        model_detail.caption("Training the model...")
         model_lstm, history, loss_curve_fig = train_lstm_model_with_graphs(data)
 
         # Display Training Loss Curve
-        st.sidebar.subheader("LSTM Performance Graphs")
-        with st.sidebar.expander("Training Loss Curve"):
+        model_detail.subheader("LSTM Performance Graphs")
+        with model_detail.popover("Training Loss Curve"):
             st.plotly_chart(loss_curve_fig, use_container_width=True)
 
         # Predict next week's prices and behavior

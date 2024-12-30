@@ -1,6 +1,6 @@
 import streamlit as st
 from page.single_stock_pred import single_stock_page
-from page.portfolio_pred import portfolio_page
+from page.portfolio_pred import portfolio_pred_page
 
 # Streamlit App Title
 st.title("Enhanced Stock Prediction App")
@@ -16,4 +16,4 @@ page = st.sidebar.radio("Go to", ["Single Stock Prediction", "Portfolio Analysis
 if page == "Single Stock Prediction":
     single_stock_page()
 elif page == "Portfolio Analysis":
-    portfolio_page()
+    portfolio_pred_page()
