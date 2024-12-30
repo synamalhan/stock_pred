@@ -2,8 +2,14 @@ import streamlit as st
 from page.single_stock_pred import single_stock_page
 from page.portfolio_pred import portfolio_pred_page
 
+st.set_page_config(
+    page_title="Stock & Portfolio Prediction",
+    layout="wide",
+    page_icon="logo.png"
+)
+st.logo("logo.png", size="large")
 # Streamlit App Title
-st.title("Enhanced Stock Prediction App")
+st.markdown("<h1 style='text-align: center;'>Enhanced Stock Prediction App</h1>", unsafe_allow_html=True)
 
 # Sidebar Navigation
 st.sidebar.title("Navigation")
