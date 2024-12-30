@@ -17,7 +17,7 @@ def single_stock_page():
     if ticker:
         # Fetch stock data from Yahoo Finance
         stock = yf.Ticker(ticker)
-        data = stock.history(period="5y")
+        data = stock.history(period="1y")
         today_price = stock.history(period="1d")['Close'][-1]
         stock_info = stock.info
 
