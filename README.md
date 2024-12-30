@@ -1,43 +1,29 @@
-# Enhanced Stock Prediction App with Random Forest
+# 📈 Portfolio Prediction and Stock Analysis App 📉
 
 ## Overview
 
-This Streamlit app uses a Random Forest Classifier to predict stock prices for the next 5 days based on historical stock data. The app fetches stock data from Yahoo Finance (```yfinance```) and uses various machine learning techniques for predictions, including feature engineering and model evaluation with performance metrics.
+This Streamlit application provides a comprehensive platform for tracking portfolio performance, conducting risk-return analysis, generating stock price predictions, and visualizing financial data with interactive charts. The app leverages modern machine learning techniques and financial metrics to assist users in making informed decisions.
 
 ## Features
 
-- **Stock Ticker Input**: Enter a stock ticker (e.g., AAPL) to fetch historical data.
-- **Predictions**: Displays predictions for the next 5 days with confidence.
-- **Model Metrics**: Shows performance metrics like Accuracy, AUC-ROC, Confusion Matrix, and ROC Curve.
-- **Visualizations**: Interactive visualizations for stock prices, moving averages, and model performance.
+- **Portfolio Tracking**: Input multiple stock tickers to track portfolio performance over time.
+- **Risk-Return Analysis**: Calculate Sharpe and Sortino ratios for individual stocks and the entire portfolio.
+- **Stock Information**: View real-time information such as stock name and current price for each ticker.
+- **Stock Price Predictions**: Predict future stock prices using machine learning models (Random Forest and LSTM).
+- **Candlestick Charts**: Visualize stock price movements with interactive candlestick charts.
+- **Portfolio Optimization Feedback**: Get actionable feedback based on portfolio risk and return metrics.
+- **Model Performance Insights**: Evaluate the accuracy of prediction models with performance graphs.
 
-## Requirements
+## Installation
 
-The project requires the following Python libraries:
-
-- ```streamlit```
-- ```yfinance```
-- ```pandas```
-- ```scikit-learn```
-- ```plotly```
-- ```numpy```
-
-You can install the dependencies using the following command:
-
-```
-pip install -r requirements.txt
-```
-
-## How to Use
-
-1. Clone the repository to your local machine:
+1. Clone the repository:
    ```
-   git clone https://github.com/synamalhan/stock_pred.git
+   git clone <repository_url>
    ```
 
 2. Navigate to the project directory:
    ```
-   cd enhanced-stock-prediction
+   cd portfolio-prediction
    ```
 
 3. Install the required dependencies:
@@ -45,27 +31,44 @@ pip install -r requirements.txt
    pip install -r requirements.txt
    ```
 
-4. Run the Streamlit app:
+## Usage
+
+1. Run the Streamlit app:
    ```
    streamlit run app.py
    ```
 
-5. Enter a stock ticker (e.g., AAPL) in the input box to see the stock prediction results.
+2. Open the app in your browser and interact with the various sections:
+   - **Portfolio Prediction**: Input stock tickers separated by commas.
+   - **Risk/Return Analysis**: View Sharpe and Sortino ratios for each stock and the portfolio.
+   - **Predictions and Charts**: Explore 7-day stock price predictions and candlestick charts.
 
-## Model Evaluation Metrics
+## File Structure
 
-### Accuracy
-The **Accuracy** metric measures the percentage of correctly predicted outcomes compared to the total predictions.
+- **app.py**: Main application file.
+- **utils.py**: Contains utility functions for portfolio tracking, financial calculations, and machine learning models.
+- **requirements.txt**: Lists all dependencies required for the app.
 
-### AUC-ROC
-The **AUC-ROC** metric evaluates the model’s ability to distinguish between classes. A higher AUC value indicates better performance.
+## Key Components
 
-### Confusion Matrix
-The **Confusion Matrix** provides insights into the true positives, false positives, true negatives, and false negatives for the model's predictions.
+### Portfolio Tracking
+- Input stock tickers and view their performance in a line chart.
+- Real-time stock information is displayed in expanders labeled with the stock ticker and name.
 
-### ROC Curve
-The **ROC Curve** plots the True Positive Rate vs. False Positive Rate at various thresholds, helping visualize the model's performance.
+### Risk-Return Analysis
+- Compute and display Sharpe and Sortino ratios for each stock and the portfolio.
+- Provide actionable feedback for optimizing the portfolio.
+
+### Stock Price Predictions
+- Train and visualize the performance of Random Forest and LSTM models.
+- View predictions for the next 7 days with accompanying interactive candlestick charts.
+
+### Visualization
+- Generate interactive plots using Plotly for better insights into financial data.
+- Candlestick charts offer a clear view of stock price movements.
+
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the [MIT License](LICENSE).
+
