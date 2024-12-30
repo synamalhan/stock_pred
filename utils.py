@@ -1,3 +1,14 @@
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import precision_recall_curve, auc
+import plotly.express as px
+import plotly.graph_objects as go
 import yfinance as yf
 import numpy as np
 import pandas as pd
@@ -28,18 +39,6 @@ def track_portfolio(portfolio_tickers):
     return portfolio_df
 
 
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
-from sklearn.preprocessing import MinMaxScaler
-import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix, classification_report, ConfusionMatrixDisplay
-from sklearn.metrics import precision_recall_curve, auc
-import seaborn as sns
-import plotly.express as px
-import plotly.graph_objects as go
 
 # Function to plot confusion matrix for Random Forest with custom color scheme
 def plot_confusion_matrix_rf(y_test, y_pred):

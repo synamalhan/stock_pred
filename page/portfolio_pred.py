@@ -1,7 +1,7 @@
 import streamlit as st
 import yfinance as yf
 import pandas as pd
-from utils import track_portfolio, calculate_rsi, train_rf_model_with_graphs, train_lstm_model_with_graphs, sharpe_ratio, sortino_ratio
+from utils import track_portfolio, train_rf_model_with_graphs, train_lstm_model_with_graphs, sharpe_ratio, sortino_ratio
 import plotly.graph_objects as go
 import numpy as np
 
