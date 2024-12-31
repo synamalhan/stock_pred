@@ -4,6 +4,10 @@
 
 This Streamlit application provides a comprehensive platform for tracking portfolio performance, conducting risk-return analysis, generating stock price predictions, and visualizing financial data with interactive charts. The app leverages modern machine learning techniques and financial metrics to assist users in making informed decisions.
 
+https://portfolio-stock-pred.streamlit.app/
+
+[![Watch the video](./image.png)](https://youtu.be/BNgE11T8JC0)
+
 ## Features
 
 - **Portfolio Tracking**: Input multiple stock tickers to track portfolio performance over time.
