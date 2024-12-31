@@ -1,4 +1,4 @@
-# 📈 Portfolio Prediction and Stock Analysis App 📉
+# 📈 Portfolio Analyzer and Stock Prediction Dashboard 📉
 
 ## Overview
 
