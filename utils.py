@@ -13,6 +13,9 @@ import yfinance as yf
 import numpy as np
 import pandas as pd
 
+def format_price(value):
+    return f"${round(value, 2)}"
+
 # RSI Calculation
 def calculate_rsi(data, window=14):
     delta = data['Close'].diff()

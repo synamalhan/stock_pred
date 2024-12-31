@@ -1,7 +1,7 @@
 import streamlit as st
 import yfinance as yf
 import pandas as pd
-from utils import track_portfolio, train_rf_model_with_graphs, train_lstm_model_with_graphs, sharpe_ratio, sortino_ratio
+from utils import track_portfolio, train_rf_model_with_graphs, train_lstm_model_with_graphs, sharpe_ratio, sortino_ratio, format_price
 import plotly.graph_objects as go
 import numpy as np
 
@@ -32,7 +32,7 @@ def portfolio_pred_page():
         for ticker in tickers_list:
             stock = yf.Ticker(ticker)
             todays_data = stock.history(period="1d")
-            stock_info.append({"Ticker": ticker, "Name": stock.info['shortName'], "Price": todays_data['Close'].iloc[0]})
+            stock_info.append({"Ticker": ticker, "Name": stock.info['shortName'], "Price": format_price(todays_data['Close'].iloc[0])})
         
         stock_info_df = pd.DataFrame(stock_info)
         st.dataframe(stock_info_df, hide_index=True, use_container_width=True)
@@ -106,9 +106,16 @@ def portfolio_pred_page():
 
             # Add next 7 days' prediction (this part can be enhanced by actual prediction models like LSTM)
             predicted_dates = pd.date_range(predictions['Date'].max(), periods=8, freq='D')[1:]
-            predicted_prices = np.random.uniform(low=predictions['Close'].iloc[-1] * 0.95, high=predictions['Close'].iloc[-1] * 1.05, size=7)
+            predicted_prices = np.round(np.random.uniform(
+                low=predictions['Close'].iloc[-1] * 0.95,
+                high=predictions['Close'].iloc[-1] * 1.05,
+                size=7
+            ), 2)
 
-            prediction_df = pd.DataFrame({'Date': predicted_dates, 'Predicted Close': predicted_prices})
+            prediction_df = pd.DataFrame({
+                'Date': predicted_dates,
+                'Predicted Close': [f"${price}" for price in predicted_prices]
+            })
 
             # Display stock information inside an expander with stock ticker and name
             with pred.expander(f"{ticker} - {stock.info['shortName']}"):
